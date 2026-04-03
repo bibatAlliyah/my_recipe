@@ -1,4 +1,3 @@
-// ProtectedFlag.jsx
 import { Navigate } from 'react-router-dom'
 
 function ProtectedFlag({ children }) {
