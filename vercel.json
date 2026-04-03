@@ -11,7 +11,7 @@
         { "key": "Referrer-Policy", "value": "no-referrer" },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; img-src * data:; connect-src *; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline';"
+          "value": "default-src 'self'; connect-src 'self' https://www.themealdb.com; img-src 'self' https://www.themealdb.com data:; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline';"
         }
       ]
     }
