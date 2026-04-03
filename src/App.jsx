@@ -1,7 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
 import Details from './pages/Details'
-import Flag from './pages/Flag'
+import ProtectedFlag from './ProtectedFlag'
+import Flag from './Flag'
 
 function App() {
   return (
@@ -9,7 +10,14 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/meal/:id" element={<Details />} />
-        <Route path="/flag" element={<Flag />} />
+        <Route
+          path="/flag"
+          element={
+            <ProtectedFlag>
+              <Flag />
+            </ProtectedFlag>
+          }
+        />
       </Routes>
     </BrowserRouter>
   )

@@ -25,6 +25,7 @@ function Home() {
 
         if (keyIndex.current === konami.length) {
           keyIndex.current = 0
+          sessionStorage.setItem('konami_unlocked', 'true')
           navigate('/flag')
         }
       } else {
