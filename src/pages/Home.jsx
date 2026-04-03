@@ -18,6 +18,7 @@ function Home() {
   if (isLoading) return <p>Loading...</p>
 
   const meals = data?.meals || []
+  const totalPages = Math.ceil(meals.length / itemsPerPage)
 
   const paginatedMeals = meals.slice(
     (page - 1) * itemsPerPage,
@@ -89,10 +90,17 @@ function Home() {
 
       {/* Page buttons */}
       <div style={{ marginTop: '20px' }}>
-        <button onClick={() => setPage(page - 1)} disabled={page === 1}>
+        <button 
+          onClick={() => setPage(page - 1)} 
+          disabled={page === 1}
+        >
           Prev
         </button>
-        <button onClick={() => setPage(page + 1)}>
+
+        <button 
+          onClick={() => setPage(page + 1)} 
+          disabled={page === totalPages}
+        >
           Next
         </button>
       </div>
