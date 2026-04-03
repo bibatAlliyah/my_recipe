@@ -6,6 +6,11 @@ function Home() {
   const [searchTerm, setSearchTerm] = useState('')
   const [page, setPage] = useState(1)
 
+  //prevents potential injection patterns and inputting weird characters
+  const cleanInput = (input) => {
+    return input.replace(/[^a-zA-Z0-9 ]/g, '')
+  }
+
   const { data: mealsData, isLoading } = useGetMealsQuery()
   const { data: searchData } = useSearchMealsQuery(searchTerm, {
     skip: searchTerm === '',
@@ -16,6 +21,7 @@ function Home() {
   const itemsPerPage = 10
 
   if (isLoading) return <p>Loading...</p>
+  if (!data?.meals) return <p>No results found</p>
 
   const meals = data?.meals || []
   const totalPages = Math.ceil(meals.length / itemsPerPage)
@@ -33,7 +39,8 @@ function Home() {
         placeholder="Search meals..."
         value={searchTerm}
         onChange={(e) => {
-          setSearchTerm(e.target.value)
+          const value = cleanInput(e.target.value)
+          setSearchTerm(value)
           setPage(1)
         }}
         style={{
@@ -96,6 +103,8 @@ function Home() {
         >
           Prev
         </button>
+
+        <p>Page {page} of {totalPages}</p>
 
         <button 
           onClick={() => setPage(page + 1)} 
