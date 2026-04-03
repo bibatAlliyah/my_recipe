@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useGetMealsQuery, useSearchMealsQuery } from '../redux/apiSlice'
 import { Link } from 'react-router-dom'
+import { useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 function Home() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -31,8 +33,48 @@ function Home() {
     page * itemsPerPage
   )
 
+  const navigate = useNavigate()
+
+  const konami = [
+    'ArrowUp',
+    'ArrowUp',
+    'ArrowDown',
+    'ArrowDown',
+    'ArrowLeft',
+    'ArrowRight',
+    'ArrowLeft',
+    'ArrowRight',
+    'b',
+    'a'
+  ]
+
+  const keyIndex = useRef(0)
+
+  useEffect(() => {
+    const handler = (e) => {
+      const key = e.key
+
+      if (key.toLowerCase() === konami[keyIndex.current].toLowerCase()) {
+        keyIndex.current += 1
+
+        if (keyIndex.current === konami.length) {
+          keyIndex.current = 0
+          navigate('/flag')
+        }
+      } else {
+        keyIndex.current = 0
+      }
+    }
+
+    window.addEventListener('keydown', handler)
+
+    return () => window.removeEventListener('keydown', handler)
+  }, [navigate])
+
   return (
     <div style={{ padding: '20px' }}>
+      <h1 style={{ textAlign: 'center' }}>コナミコマンド</h1>
+      
       {/* Search */}
       <input
         type="text"
