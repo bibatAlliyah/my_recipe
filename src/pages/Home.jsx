@@ -1,60 +1,26 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useGetMealsQuery, useSearchMealsQuery } from '../redux/apiSlice'
-import { Link } from 'react-router-dom'
-import { useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 function Home() {
   const [searchTerm, setSearchTerm] = useState('')
   const [page, setPage] = useState(1)
 
-  //prevents potential injection patterns and inputting weird characters
-  const cleanInput = (input) => {
-    return input.replace(/[^a-zA-Z0-9 ]/g, '')
-  }
-
-  const { data: mealsData, isLoading } = useGetMealsQuery()
-  const { data: searchData } = useSearchMealsQuery(searchTerm, {
-    skip: searchTerm === '',
-  })
-
-  const data = searchTerm ? searchData : mealsData
-
-  const itemsPerPage = 10
-
-  if (isLoading) return <p>Loading...</p>
-  if (!data?.meals) return <p>No results found</p>
-
-  const meals = data?.meals || []
-  const totalPages = Math.ceil(meals.length / itemsPerPage)
-
-  const paginatedMeals = meals.slice(
-    (page - 1) * itemsPerPage,
-    page * itemsPerPage
-  )
-
   const navigate = useNavigate()
 
-  const konami = [
-    'ArrowUp',
-    'ArrowUp',
-    'ArrowDown',
-    'ArrowDown',
-    'ArrowLeft',
-    'ArrowRight',
-    'ArrowLeft',
-    'ArrowRight',
-    'b',
-    'a'
-  ]
-
   const keyIndex = useRef(0)
+
+  const konami = [
+    'ArrowUp','ArrowUp','ArrowDown','ArrowDown', 'ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'
+  ]
 
   useEffect(() => {
     const handler = (e) => {
       const key = e.key
 
-      if (key.toLowerCase() === konami[keyIndex.current].toLowerCase()) {
+      if (
+        key.toLowerCase() === konami[keyIndex.current].toLowerCase()
+      ) {
         keyIndex.current += 1
 
         if (keyIndex.current === konami.length) {
@@ -67,14 +33,39 @@ function Home() {
     }
 
     window.addEventListener('keydown', handler)
-
     return () => window.removeEventListener('keydown', handler)
   }, [navigate])
+
+  const { data: mealsData, isLoading } = useGetMealsQuery()
+  const { data: searchData } = useSearchMealsQuery(searchTerm, {
+    skip: searchTerm === '',
+  })
+
+  const data = searchTerm ? searchData : mealsData
+
+  //loading
+  if (isLoading) return <p>Loading...</p>
+  if (!data?.meals) return <p>No results found</p>
+
+  const meals = data.meals
+
+  const itemsPerPage = 10
+  const totalPages = Math.ceil(meals.length / itemsPerPage)
+
+  const paginatedMeals = meals.slice(
+    (page - 1) * itemsPerPage,
+    page * itemsPerPage
+  )
+
+  //input sanitizer
+  const cleanInput = (input) => {
+    return input.replace(/[^a-zA-Z0-9 ]/g, '')
+  }
 
   return (
     <div style={{ padding: '20px' }}>
       <h1 style={{ textAlign: 'center' }}>コナミコマンド</h1>
-      
+
       {/* Search */}
       <input
         type="text"
@@ -123,14 +114,14 @@ function Home() {
               <img
                 src={meal.strMealThumb}
                 alt={meal.strMeal}
-                style={{ 
-                    width: '100%', 
-                    height: '150px', 
-                    objectFit: 'cover'
+                style={{
+                  width: '100%',
+                  height: '150px',
+                  objectFit: 'cover',
                 }}
               />
               <div style={{ padding: '10px', flex: 1 }}>
-                <h4 style={{ margin: 0 }}> {meal.strMeal}</h4>
+                <h4 style={{ margin: 0 }}>{meal.strMeal}</h4>
               </div>
             </div>
           </Link>
@@ -138,18 +129,22 @@ function Home() {
       </div>
 
       {/* Page buttons */}
-      <div style={{ marginTop: '20px' }}>
-        <button 
-          onClick={() => setPage(page - 1)} 
+      <div style={{ marginTop: '20px', textAlign: 'center' }}>
+        <button
+          onClick={() => setPage((p) => Math.max(p - 1, 1))}
           disabled={page === 1}
         >
           Prev
         </button>
 
-        <p>Page {page} of {totalPages}</p>
+        <p>
+          Page {page} of {totalPages}
+        </p>
 
-        <button 
-          onClick={() => setPage(page + 1)} 
+        <button
+          onClick={() =>
+            setPage((p) => Math.min(p + 1, totalPages))
+          }
           disabled={page === totalPages}
         >
           Next
