@@ -37,15 +37,24 @@ function Home() {
     return () => window.removeEventListener('keydown', handler)
   }, [navigate])
 
-  const { data: mealsData, isLoading } = useGetMealsQuery()
-  const { data: searchData } = useSearchMealsQuery(searchTerm, {
+  const { data: mealsData, isLoading, error } = useGetMealsQuery()
+  const { 
+  data: searchData, 
+  isLoading: searchLoading, 
+  error: searchError 
+  } = useSearchMealsQuery(searchTerm, {
     skip: searchTerm === '',
   })
 
   const data = searchTerm ? searchData : mealsData
 
   //loading
-  if (isLoading) return <p>Loading...</p>
+  if (isLoading || searchLoading) return <p style={{ textAlign: 'center', marginTop: '20px' }}>
+  Loading meals...
+</p>
+  if (error || searchError) return <p style={{ textAlign: 'center', color: 'red' }}>
+  Error fetching data
+</p>
   if (!data?.meals) return <p>No results found</p>
 
   const meals = data.meals
@@ -92,41 +101,42 @@ function Home() {
           gap: '20px',
         }}
       >
-        {paginatedMeals.map((meal) => (
-          <Link
-            to={`/meal/${meal.idMeal}`}
-            key={meal.idMeal}
-            style={{
-              textDecoration: 'none',
-              color: 'inherit',
-            }}
-          >
-            <div
-              style={{
-                border: '1px solid #ddd',
-                borderRadius: '10px',
-                overflow: 'hidden',
-                boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-              }}
+        {paginatedMeals.map((meal) => {
+          const [isHovered, setIsHovered] = useState(false)
+
+          return (
+            <Link
+              to={`/meal/${meal.idMeal}`}
+              key={meal.idMeal}
+              style={{ textDecoration: 'none', color: 'inherit' }}
             >
-              <img
-                src={meal.strMealThumb}
-                alt={meal.strMeal}
+              <div
                 style={{
-                  width: '100%',
-                  height: '150px',
-                  objectFit: 'cover',
+                  border: '1px solid #ddd',
+                  borderRadius: '10px',
+                  overflow: 'hidden',
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  backgroundColor: isHovered ? '#ff9f9f' : '#ffffff', // hover effect
+                  transition: 'background-color 0.2s ease',
                 }}
-              />
-              <div style={{ padding: '10px', flex: 1 }}>
-                <h4 style={{ margin: 0 }}>{meal.strMeal}</h4>
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+              >
+                <img
+                  src={meal.strMealThumb}
+                  alt={meal.strMeal}
+                  style={{ width: '100%', height: '150px', objectFit: 'cover' }}
+                />
+                <div style={{ padding: '10px', flex: 1 }}>
+                  <h4 style={{ margin: 0 }}>{meal.strMeal}</h4>
+                </div>
               </div>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          )
+        })}
       </div>
 
       {/* Page buttons */}
@@ -138,9 +148,23 @@ function Home() {
           Prev
         </button>
 
-        <p>
-          Page {page} of {totalPages}
-        </p>
+  {/* Numbered page buttons */}
+  {[...Array(totalPages)].map((_, index) => {
+    const pageNum = index + 1
+    return (
+      <button
+        key={pageNum}
+        onClick={() => setPage(pageNum)}
+        style={{
+          margin: '0 5px',
+          fontWeight: page === pageNum ? 'bold' : 'normal',
+          textDecoration: page === pageNum ? 'underline' : 'none',
+        }}
+      >
+        {pageNum}
+      </button>
+    )
+  })}
 
         <button
           onClick={() =>
