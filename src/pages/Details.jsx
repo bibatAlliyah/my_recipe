@@ -6,10 +6,15 @@ function Details() {
   const navigate = useNavigate()
 
   //get meal data
-  const { data, isLoading } = useGetMealByIdQuery(id)
+  const { data, isLoading, error } = useGetMealByIdQuery(id)
   const meal = data?.meals?.[0]
 
-  if (isLoading) return <p>Loading...</p>
+  if (isLoading) return <p style={{ textAlign: 'center', marginTop: '20px' }}>
+  Loading meals...
+</p>
+  if (error) return <p style={{ textAlign: 'center', color: 'red' }}>
+  Error fetching data
+</p>
   if (!meal) return <p>No meal found</p>
 
   return (
@@ -48,6 +53,22 @@ function Details() {
       </div>
 
       <div style={{ marginTop: '20px', lineHeight: '1.8', textAlign: 'left' }}>
+        <h3>Ingredients</h3>
+        <ul>
+          {[...Array(20)].map((_, i) => {
+            const ingredient = meal[`strIngredient${i + 1}`]
+            const measure = meal[`strMeasure${i + 1}`]
+
+            if (!ingredient) return null
+
+            return (
+              <li key={i}>
+                {ingredient} - {measure}
+              </li>
+            )
+          })}
+        </ul>
+
         <h3>Instructions</h3>
 
         {meal.strInstructions
