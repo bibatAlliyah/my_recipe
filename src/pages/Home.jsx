@@ -53,13 +53,45 @@ function Home() {
   }
 
   if (isLoading || searchLoading)
-    return <p className="status-text">Cooking Something Up...</p>
+  return (
+    <div className="loading-screen">
+      <div className="loading-wrapper">
+
+        <div className="loading-wave">🍤</div>
+
+        <p className="loading-text">
+          Cooking something delicious...
+        </p>
+
+        <div className="loading-dots">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+      </div>
+    </div>
+  )
 
   if (error || searchError)
     return <p className="status-text error">Error fetching data</p>
 
   if (!data?.meals)
-    return <p className="status-text">No meals found! :/</p>
+  return (
+    <div className="empty-screen">
+      <div className="empty-card">
+
+        <div className="empty-icon">🍤</div>
+
+        <h2>No meals found</h2>
+
+        <p>
+          Try adjusting your search or filter — the kitchen is a bit empty right now.
+        </p>
+
+      </div>
+    </div>
+  )
 
   let meals = data.meals
 
