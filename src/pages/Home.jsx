@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useGetMealsQuery, useSearchMealsQuery } from '../redux/apiSlice'
 import { Link, useNavigate } from 'react-router-dom'
+import logo from '../assets/logo.png';
 
 function Home() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -8,7 +9,6 @@ function Home() {
   const [filterType, setFilterType] = useState('All')
 
   const navigate = useNavigate()
-
   const keyIndex = useRef(0)
 
   const konami = [
@@ -20,9 +20,7 @@ function Home() {
     const handler = (e) => {
       const key = e.key
 
-      if (
-        key.toLowerCase() === konami[keyIndex.current].toLowerCase()
-      ) {
+      if (key.toLowerCase() === konami[keyIndex.current].toLowerCase()) {
         keyIndex.current += 1
 
         if (keyIndex.current === konami.length) {
@@ -50,21 +48,19 @@ function Home() {
 
   const data = searchTerm ? searchData : mealsData
 
-  // input sanitizer
   const cleanInput = (input) => {
     return input.replace(/[^a-zA-Z0-9 ]/g, '')
   }
 
   if (isLoading || searchLoading)
-    return <p style={{ textAlign: 'center', marginTop: '20px' }}>Loading meals...</p>
+    return <p className="status-text">Loading meals...</p>
 
   if (error || searchError)
-    return <p style={{ textAlign: 'center', color: 'red' }}>Error fetching data</p>
+    return <p className="status-text error">Error fetching data</p>
 
   if (!data?.meals)
-    return <p>No results found</p>
+    return <p className="status-text">No results found</p>
 
-  // 🔥 APPLY FILTERING HERE
   let meals = data.meals
 
   if (filterType !== 'All') {
@@ -92,99 +88,85 @@ function Home() {
   ]
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h1 style={{ textAlign: 'center' }}>コナミコマンド</h1>
+    <div className="home-container">
+      <div class="wave-top">
+        <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+          <path 
+            d="M0,64 C240,120 480,0 720,64 C960,120 1200,0 1440,64 L1440,0 L0,0 Z" 
+            fill="#7dd3fc">
+          </path>
+        </svg>
+      </div>
+      <img src={logo} alt="Logo" className="logo" />
 
-      {/* Search */}
-      <input
-        type="text"
-        placeholder="Search meals..."
-        value={searchTerm}
-        onChange={(e) => {
-          const value = cleanInput(e.target.value)
-          setSearchTerm(value)
-          setPage(1)
-        }}
-        style={{
-          padding: '10px',
-          width: '100%',
-          marginBottom: '10px',
-        }}
-      />
+      <h1 class="home-title">Catch something good today.</h1>
+      <p class="home-subtitle">
+         A curated collection of seafood recipes made for everyday cooking—fresh, simple, and always worth a try.
+      </p>
 
-      {/* 🔽 FILTER DROPDOWN */}
-      <select
-        value={filterType}
-        onChange={(e) => {
-          setFilterType(e.target.value)
-          setPage(1)
-        }}
-        style={{
-          padding: '10px',
-          width: '100%',
-          marginBottom: '20px',
-        }}
-      >
-        {filterOptions.map((type) => (
-          <option key={type} value={type}>
-            {type}
-          </option>
-        ))}
-      </select>
+      <p class="subtle-note">for your コナミコマンド</p>
+      <div className="controls">
+        <input
+          type="text"
+          placeholder="Search meals..."
+          value={searchTerm}
+          onChange={(e) => {
+            const value = cleanInput(e.target.value)
+            setSearchTerm(value)
+            setPage(1)
+          }}
+          className="search-input"
+        />
 
-      {/* Card Grid */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-          gap: '20px',
-        }}
-      >
+        <select
+          value={filterType}
+          onChange={(e) => {
+            setFilterType(e.target.value)
+            setPage(1)
+          }}
+          className="filter-dropdown"
+        >
+          {filterOptions.map((type) => (
+            <option key={type} value={type}>
+              {type}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Grid */}
+      <div className="meal-grid">
         {paginatedMeals.map((meal) => (
           <Link
             to={`/meal/${meal.idMeal}`}
             key={meal.idMeal}
-            style={{ textDecoration: 'none', color: 'inherit' }}
+            className="meal-link"
           >
-            <div
-              style={{
-                border: '1px solid #ddd',
-                borderRadius: '10px',
-                overflow: 'hidden',
-                boxShadow: '0 2px 6px rgba(0,0,0,0.1)',
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                backgroundColor: '#fff',
-                transition: 'background-color 0.2s ease',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#ff8686'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = '#fff'
-              }}
-            >
+            <div className="meal-card">
               <img
                 src={meal.strMealThumb}
                 alt={meal.strMeal}
-                style={{
-                  width: '100%',
-                  height: '150px',
-                  objectFit: 'cover'
-                }}
+                className="meal-image"
               />
-              <div style={{ padding: '10px', flex: 1 }}>
-                <h4 style={{ margin: 0 }}>{meal.strMeal}</h4>
+              <div className="meal-content">
+                <h4 className="meal-title">{meal.strMeal}</h4>
+
+                <button
+                  className="cook-btn"
+                  onClick={() => navigate(`/meal/${meal.idMeal}`)}
+                >
+                  Start Cooking!
+                </button>
               </div>
             </div>
           </Link>
         ))}
       </div>
 
-      {/* Page buttons */}
-      <div style={{ marginTop: '20px', textAlign: 'center' }}>
+      {/* Pagination */}
+      <div className="pagination">
         <button
+          className="page-btn"
           onClick={() => setPage((p) => Math.max(p - 1, 1))}
           disabled={page === 1}
         >
@@ -197,11 +179,7 @@ function Home() {
             <button
               key={pageNum}
               onClick={() => setPage(pageNum)}
-              style={{
-                margin: '0 5px',
-                fontWeight: page === pageNum ? 'bold' : 'normal',
-                textDecoration: page === pageNum ? 'underline' : 'none',
-              }}
+              className={`page-btn ${page === pageNum ? 'active' : ''}`}
             >
               {pageNum}
             </button>
@@ -209,11 +187,20 @@ function Home() {
         })}
 
         <button
+          className="page-btn"
           onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
           disabled={page === totalPages}
         >
           Next
         </button>
+      </div>
+      <div class="wave-container">
+        <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+          <path 
+            d="M0,64 C240,120 480,0 720,64 C960,120 1200,0 1440,64 L1440,120 L0,120 Z" 
+            fill="#7dd3fc">
+          </path>
+        </svg>
       </div>
     </div>
   )
