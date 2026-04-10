@@ -108,7 +108,7 @@ function Home() {
       <div className="controls">
         <input
           type="text"
-          placeholder="Search meals..."
+          placeholder="🔎 Search meals..."
           value={searchTerm}
           onChange={(e) => {
             const value = cleanInput(e.target.value)

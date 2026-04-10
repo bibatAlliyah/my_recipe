@@ -172,7 +172,7 @@ p {
 }
 
 .filter-dropdown {
-  width: 8%;
+  width: 10%;
 }
 
 .search-input,
@@ -260,7 +260,6 @@ button,
   flex: 1;                /* takes remaining space */
   display: flex;
   flex-direction: column;
-
   align-items: center;
   text-align: center;
 }
@@ -358,5 +357,235 @@ button,
 @media (max-width: 480px) {
   .meal-grid {
     grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+/* ========= DETAILS CSS PAGE =========== */
+.recipe-page {
+  min-height: 100vh;
+  padding: 30px 20px;
+  background: #fbfaf7;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.recipe-page::before,
+.recipe-page::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  width: 80px;
+  height: 100vh;
+  z-index: 0;
+}
+
+.recipe-page::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 80px;
+  height: 100vh;
+  z-index: 0;
+
+  background-image:
+    linear-gradient(to right, rgba(0, 120, 255, 0.25) 5px, transparent 5px),
+    linear-gradient(to bottom, rgba(0, 120, 255, 0.25) 5px, transparent 5px);
+
+  background-size: 15px 15px;
+}
+
+.recipe-page::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 80px;
+  height: 100vh;
+  z-index: 0;
+
+  background-image:
+    linear-gradient(to right, rgba(0, 120, 255, 0.30) 5px, transparent 5px),
+    linear-gradient(to bottom, rgba(0, 120, 255, 0.30) 5px, transparent 5px);
+
+  background-size: 15px 15px;
+}
+
+.recipe-content,
+.recipe-title,
+.recipe-image-container,
+.back-btn {
+  position: relative;
+  z-index: 1;
+}
+.back-btn {
+  font-family: "Inter", sans-serif;
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: #aee9ff;
+  color: var(--text-h);
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.back-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.1);
+}
+
+.recipe-title {
+  font-family: "Bree Serif", cursive;
+  letter-spacing: 0.2px;
+  font-size: 42px;
+  font-weight: 400;
+  text-align: center;
+  margin: 20px 0;
+  color: #3c6192;
+}
+
+.recipe-image-container {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.recipe-image {
+  width: 100%;
+  height: 500px;
+  object-fit: cover;
+  filter: brightness(0.85) contrast(1.05);
+}
+
+.recipe-content {
+  max-width: 900px;
+  margin: 40px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.ingredients,
+.instructions {
+  font-family: "Inter", sans-serif;
+  line-height: 1.7;
+}
+
+.instructions p,
+.ingredients li {
+  text-align: left;
+}
+
+.ingredients h2,
+.instructions h2 {
+  font-family: "EB Garamond", serif;
+  color: var(--text-h);
+}
+
+.ingredients ul {
+  padding-left: 20px;
+}
+
+.ingredients li {
+  margin-bottom: 6px;
+}
+
+.instructions p {
+  margin-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+  .recipe-page{
+    margin-top: 40px;
+  }
+  
+  .recipe-page::before,
+  .recipe-page::after {
+    width: 100vw;
+    height: 40px;
+    left: 0;
+    right: 0;
+    padding-top: 20px;
+  }
+
+  /* TOP border */
+  .recipe-page::before {
+    top: 0;
+    bottom: auto;
+    background-color: #aee9ff;
+
+    background-image:
+    linear-gradient(to right, rgba(0, 120, 255, 0.30) 5px, transparent 5px),
+    linear-gradient(to bottom, rgba(0, 120, 255, 0.30) 5px, transparent 5px);
+
+    background-size: 15px 15px;
+  }
+
+  /* BOTTOM border */
+  .recipe-page::after {
+    top: auto;
+    bottom: 0;
+    background-color: #aee9ff;
+
+    background-image:
+    linear-gradient(to right, rgba(0, 120, 255, 0.30) 5px, transparent 5px),
+    linear-gradient(to bottom, rgba(0, 120, 255, 0.30) 5px, transparent 5px);
+
+    background-size: 15px 15px;
+  }
+
+  .recipe-page::before,
+  .recipe-page::after {
+    z-index: 10;
+    pointer-events: none;
+  }
+}
+
+@media (max-width: 426px) {
+  .recipe-page{
+    margin-top: 15px;
+  }
+  
+  .recipe-page::before,
+  .recipe-page::after {
+    width: 100vw;
+    height: 20px;
+    left: 0;
+    right: 0;
+    padding-top: 20px;
+  }
+
+  /* TOP border */
+  .recipe-page::before {
+    top: 0;
+    bottom: auto;
+    background-color: #aee9ff;
+
+    background-image:
+    linear-gradient(to right, rgba(0, 120, 255, 0.30) 5px, transparent 5px),
+    linear-gradient(to bottom, rgba(0, 120, 255, 0.30) 5px, transparent 5px);
+
+    background-size: 15px 15px;
+  }
+
+  /* BOTTOM border */
+  .recipe-page::after {
+    top: auto;
+    bottom: 0;
+    background-color: #aee9ff;
+
+    background-image:
+    linear-gradient(to right, rgba(0, 120, 255, 0.30) 5px, transparent 5px),
+    linear-gradient(to bottom, rgba(0, 120, 255, 0.30) 5px, transparent 5px);
+
+    background-size: 15px 15px;
+  }
+
+  .recipe-page::before,
+  .recipe-page::after {
+    z-index: 10;
+    pointer-events: none;
   }
 }
