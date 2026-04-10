@@ -22,21 +22,6 @@
   background: var(--bg);
 }
 
-/* ===== DARK MODE ===== */
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-
-    --shadow: rgba(0, 0, 0, 0.4) 0 10px 15px -3px;
-  }
-} */
-
 /* ===== BASE ===== */
 body {
   margin: 0;

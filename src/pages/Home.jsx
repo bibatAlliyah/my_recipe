@@ -53,13 +53,13 @@ function Home() {
   }
 
   if (isLoading || searchLoading)
-    return <p className="status-text">Loading meals...</p>
+    return <p className="status-text">Cooking Something Up...</p>
 
   if (error || searchError)
     return <p className="status-text error">Error fetching data</p>
 
   if (!data?.meals)
-    return <p className="status-text">No results found</p>
+    return <p className="status-text">No meals found! :/</p>
 
   let meals = data.meals
 
